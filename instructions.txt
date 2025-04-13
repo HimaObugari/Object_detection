@@ -1,0 +1,13 @@
+./run_docker.sh
+
+python main.py
+
+yolo task=detect mode=train model=yolov8n.pt data=/app/data.yaml epochs=5 imgsz=640
+
+yolo task=detect mode=val model=runs/detect/train/weights/best.pt data=/app/data.yaml
+
+
+yolo task=detect mode=predict model=runs/detect/train/weights/best.pt source=data/images/val
+
+
+
