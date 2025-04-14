@@ -1,12 +1,14 @@
 train: data/images/train
 val: data/images/val
 
-names:
+names: 
   0: Car
   1: Human
   2: Bus
   3: Truck
-  4: Bike
-  5: Motor
-  6: Traffic Light
-  7: Traffic Sign
+  4: Bicycle
+  5: Rider
+  6: Motorcycle
+  7: Train
+  8: Traffic Light
+  9: Traffic Sign
