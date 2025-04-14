@@ -28,12 +28,14 @@ and can therefore be used in real-time applications. They are super fast but not
 
 <img width="449" alt="image" src="https://github.com/user-attachments/assets/2a6d469b-b5e9-42b5-8136-b5c75be6d636" />
 <img width="449" alt="image" src="https://github.com/user-attachments/assets/d9f97eb6-85c4-4fa8-9da6-fb7277042135" />  
+
 The latest real-time detectors are YOLOv7 (2022), YOLOR (2021), and YOLOv4-Scaled (2020). The first image above represents the performance of various detectors and their average precision of the bounding box coordinates of the detected objects. The second image represents the speed of the detectors as frames per second, where the objects are detected. YOLOv7 has outperformed other models in both accuracy(average precision) as well as inference time.
 
 ## YOLOv8
 ### YOLO Introduction
 YOLO uses an end-to-end neural network that predicts bounding boxes and class probabilities all at once. It perfroms all the predictions with a single fully connected layer and processes an image in a single iteraction.
 <img width="497" alt="image" src="https://github.com/user-attachments/assets/87e2aa84-714d-4d2c-a9ca-05327c3235d9" />  
+
 The image above shows the architecture of a YOLO model. It includes 20 convolutional layers pre-trained using ImageNet, this pre-trained model is converted to perform detection with fully connected layers to predict class probabilities and bounding box coordinates. YOLO uses Non-maximum suppression (NMS) as post-processing step to improve the accuracy and efficiency of object detection.
 ### YOLOv8 Features
 The latest YOLOv8 has shown smaller precision and faster object detection. Hence, it is an ideal model to perfrom object detection. YOLOv8 is a computer vision model architecture developed by Ultralytics. It has features like 
