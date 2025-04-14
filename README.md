@@ -54,6 +54,33 @@ Clone this repository, to your home directory too.
 git clone https://github.com/HimaObugari/Object_detection.git
 cd Object_detection
 ```
+Create a directory `data`, with subdirectories `images`, `labels`, `labels_json`. `train` and `val` directories are created in all these subdirectories as follows
+```
+mkdir data1
+cd data1
+mkdir images labels labels_json
+cd images
+mkdir train val
+cd ..
+cd labels_json
+mkdir train val
+cd ..
+cd labels
+mkdir train val
+```
+The structure of the folders would be 
+```
+data  
+ |_ images  
+    |_ train  
+    |_ val  
+ |_ labels  
+    |_ train  
+    |_ val  
+ |_ labels_json  
+    |_ train  
+    |_ val  
+```       
 Copy `train` and `val` directories from the BDD Dataset `\home\bdd100k_images_100k\100k` and `\home\bdd100k_images_100k\100k` to directories `\home\Object_detection\data\images` and `\home\Object_detection\data\labels_json`
 ```
 cp -r \home\bdd100k_images_100k\100k\train \home\Object_detection\data\images
