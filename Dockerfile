@@ -29,3 +29,5 @@ COPY . /app
 
 # Run detection script by default
 CMD ["python", "main.py"]
+
+

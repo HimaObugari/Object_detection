@@ -10,4 +10,3 @@ yolo task=detect mode=val model=runs/detect/train/weights/best.pt data=/app/data
 yolo task=detect mode=predict model=runs/detect/train/weights/best.pt source=data/images/val
 
 
-
