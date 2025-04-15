@@ -96,7 +96,9 @@ To train a model to detect objects in BDD100k dataset using yolov8n.pt model, th
 ```
 - x_center = (x1+x2)/2, y_center = (y1+y2)/2
 - box_width = |x2-x1|, box_height = |y2-y1|
+  
 These values are normalized since the input images are normalized in YOLO model to improve the contrast among the pixels making it easier for the model to extract features for object classification. Normalized values of object centers and bounding box size would match the normalized images in the YOLO model.
+
 Normalizing these values would look like:
 - normalized_x_center = x_center/image_width, normalized_y_center = y_center/image_height
 - normalized_box_width = box_width/image_width, normalized_box_height = box_height/image_height
@@ -127,7 +129,7 @@ After the build and run, in the container run the `main.py` file to convert `.js
 ```
 python main.py
 ```
-The images and labels are ready in their designated folders. yolov8n.pt is used for a small dataset. The image size is modified to 640x640 to reduce the burden on the system. yolov8n.pt uses an AdamW optimzer with learning rate 0.000833. The number of classes yolov8n.pt can detect are 80, for BDD100k which is mostly road scenarios, the number of classes chosen are 10. Train the images with pre-trained model yolov8n.pt using the following command:
+The images and labels are ready in their designated folders. yolov8n.pt is used for a small dataset. The image size is modified to 640x640 to reduce the burden on the system. yolov8n.pt uses an AdamW optimzer with learning rate 0.000833. The number of classes yolov8n.pt can detect are 80, for BDD100k which is mostly road scenarios, the number of classes chosen are 10. Train the images with pre-trained model yolov8n.pt using the following command, give the suitable number of epochs according to the dtaset size and adjust the image size:
 ```
 yolo task=detect mode=train model=yolov8n.pt data=/app/data.yaml epochs=10 imgsz=640
 ```
