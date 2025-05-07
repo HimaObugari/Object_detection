@@ -101,6 +101,7 @@ def run_test():
     train_files,val_files=train_val_split(source_images, source_labels, train_images,train_labels,val_images,val_labels)
     move_files(source_images,source_labels,train_files, train_images, train_labels)
     move_files(source_images,source_labels,val_files, val_images, val_labels)
+    
 
 if __name__ == "__main__":
     run_test()

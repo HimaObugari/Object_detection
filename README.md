@@ -54,40 +54,6 @@ Clone this repository, to your home directory too.
 git clone https://github.com/HimaObugari/Object_detection.git
 cd Object_detection
 ```
-Create a directory `data`, with subdirectories `images`, `labels`, `labels_json`. `train` and `val` directories are created in all these subdirectories as follows
-```
-mkdir data1
-cd data1
-mkdir images labels labels_json
-cd images
-mkdir train val
-cd ..
-cd labels_json
-mkdir train val
-cd ..
-cd labels
-mkdir train val
-```
-The structure of the folders would be 
-```
-data  
- |_ images  
-    |_ train  
-    |_ val  
- |_ labels  
-    |_ train  
-    |_ val  
- |_ labels_json  
-    |_ train  
-    |_ val  
-```       
-Copy `train` and `val` directories from the BDD Dataset `\home\bdd100k_images_100k\100k` and `\home\bdd100k_images_100k\100k` to directories `\home\Object_detection\data\images` and `\home\Object_detection\data\labels_json`
-```
-cp -r \home\bdd100k_images_100k\100k\train \home\Object_detection\data\images
-cp -r \home\bdd100k_images_100k\100k\val \home\Object_detection\data\images
-cp -r \home\bdd100k_labels\100k\train \home\Object_detection\data\labels_json
-cp -r \home\bdd100k_labels\100k\val \home\Object_detection\data\labels_json
-```
 ## Data preprocessing
 To train a model to detect objects in BDD100k dataset using yolov8n.pt model, the labels are to be converted from `.json` files to `.txt` files with Class IDs of the objects. The `main.py` file converts the labels from `.json` files to `.txt` files. The `.txt` files for each label are formatted as:
 ```
@@ -117,7 +83,7 @@ The side-walks, crosswalk lanes, drivable areas are discarded from detectable ob
  - Traffic Light(class_id: 8)
  - Traffic Sign(class_id: 9)
 
-Due to the availablity of a less powerful system with no GPU, the model training is performed on small part of the dataset to work easily and quickly as well as to avoid crashing the system and model development. Only 550 images are used for training the model and it is validated on 10% of the train set size which is 55 images. 
+Due to the availablity of a less powerful system with no GPU, the model training is performed on small part of the dataset to work easily and quickly as well as to avoid crashing the system and model development. Only 286 images are used for training the model and it is validated on 32 images. 
 
 ## Model Training in Docker Container
 
@@ -125,13 +91,13 @@ To perform object detection in a docker container, a container is to be build an
 ```
 ./run_docker.sh
 ```
-After the build and run, in the container run the `main.py` file to convert `.json` files to `.txt` files as well as place them in the required folders.
+After the build and run, in the container run the `main.py` file. This converts `.json` files to `.txt` files, splits the image and label data into training and validation sets at 9:1 ratio, and place them in the required folders.
 ```
 python main.py
 ```
-The images and labels are ready in their designated folders. yolov8n.pt is used for a small dataset. The image size is modified to 640x640 to reduce the burden on the system. yolov8n.pt uses an AdamW optimzer with learning rate 0.000833. The number of classes yolov8n.pt can detect are 80, for BDD100k which is mostly road scenarios, the number of classes chosen are 10. Train the images with pre-trained model yolov8n.pt using the following command, give the suitable number of epochs according to the dtaset size and adjust the image size:
+The images and labels are ready in their designated folders. yolov8n.pt is used for a small dataset. The image size is modified to 640x640 to reduce the burden on the system. yolov8n.pt uses an AdamW optimzer with learning rate 0.000833. The number of classes yolov8n.pt can detect are 80, for BDD100k which is mostly road scenarios, the number of classes chosen are 10. Train the images with pre-trained model yolov8n.pt using the following command. Give suitable number of epochs and batch size, finetune them to achieve better model training. Adjust the image size suitable to the YOLO model capacity.
 ```
-yolo task=detect mode=train model=yolov8n.pt data=/app/data.yaml epochs=10 imgsz=640
+yolo task=detect mode=train model=yolov8n.pt data=/app/data.yaml epochs=100 imgsz=640
 ```
 The resulted model from the training is saved in `/app/runs/detect/train/weights/best.pt` and other parameters and results for different batches and epochs are located in `/app/runs/detect/train` directory(Always check the name of the folder `train`, when the model is trained multiple times, `train2`, `train3` would be created to load the latest trained model).  
 
