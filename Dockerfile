@@ -21,6 +21,8 @@ RUN pip install --upgrade pip
 
 RUN pip install notebook
 
+RUN pip3 install gdown
+
 # Clone and install Ultralytics YOLOv8
 RUN pip install ultralytics opencv-python
 

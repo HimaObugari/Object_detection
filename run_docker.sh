@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build the Docker image
-docker build -t my-python-app .
+docker build -t bdd_downloader .
 
 # Run the Docker container and open bash inside
-docker run -it --rm my-python-app bash
+docker run -it --name bdd_container -v ~/bdd_data:/data bdd_downloader bash
