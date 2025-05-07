@@ -1,11 +1,11 @@
 from pathlib import Path
 import json
-import pandas
 import cv2
-import yaml
-from ultralytics import YOLO
+import os
+import random
+import shutil
 
-def json_to_txt(set_name, label_files_paths, images_shape):
+def json_to_txt(label_files_paths, images_shape):
     label_data = []
     for i in label_files_paths:
         with open(str(i)) as json_file:
@@ -51,29 +51,56 @@ def json_to_txt(set_name, label_files_paths, images_shape):
                 elif label_data[j]["frames"][0]["objects"][i]["category"]=='traffic light':
                     class_id=9
                 label_array[j][i]=[class_id, x_center_norm, y_center_norm, box_width_norm, box_height_norm]
+    labels_dir = 'data/all_labels'
+    os.makedirs(labels_dir, exist_ok=True)
     for i in range(len(label_array)):
-        with open(f"data/labels/{set_name}/{label_files_paths[i].stem}.txt", "w") as file:
+        with open(f"data/all_labels/{label_files_paths[i].stem}.txt", "w") as file:
             for row in label_array[i]:
                 file.write(" ".join(map(str, row)) + "\n")
 
+def train_val_split(source_images,source_labels,train_images,train_labels,val_images, val_labels):
+    # Create dirs if not exist
+    for folder in [train_images, train_labels, val_images, val_labels]:
+        os.makedirs(folder, exist_ok=True)
+
+    # List of files
+    all_files = [f for f in os.listdir(source_images) if f.endswith(('.jpg', '.png'))]
+    random.shuffle(all_files)
+
+    # Split
+    split_ratio = 0.9  # 80% train, 20% val
+    split_idx = int(len(all_files) * split_ratio)
+    train_files = all_files[:split_idx]
+    val_files = all_files[split_idx:]
+    return train_files,val_files
+    
+
+def move_files(source_images, source_labels,file_list, target_img_dir, target_lbl_dir):
+    for f in file_list:
+        img_src = os.path.join(source_images, f)
+        lbl_src = os.path.join(source_labels, f.replace('.jpg', '.txt').replace('.png', '.txt'))
+
+        shutil.copy2(img_src, os.path.join(target_img_dir, f))
+        if os.path.exists(lbl_src):
+            shutil.copy2(lbl_src, os.path.join(target_lbl_dir, os.path.basename(lbl_src)))
+
 def run_test():
-    folder_path_labels_train = Path(r"data/labels_json/train")
-    folder_path_labels_val = Path(r"data/labels_json/val")
-    folder_path_images_train = Path(r"data/images/train")
-    folder_path_images_val = Path(r"data/images/val")
-    image_files_t = list(folder_path_images_train.glob("*.jpg"))
-    image_files_v = list(folder_path_images_val.glob("*.jpg"))
-    images_t = [cv2.imread(str(i)) for i in image_files_t]
-    images_v = [cv2.imread(str(i)) for i in image_files_v]
-    images_shape_t = [i.shape for i in images_t]
-    images_shape_v = [i.shape for i in images_v]
-    label_files_paths_t = list(folder_path_labels_train.glob("*.json"))
-    label_files_paths_v = list(folder_path_labels_val.glob("*.json"))
-    set_name_train = 'train'
-    set_name_val = 'val'
-    label_data_t=json_to_txt(set_name_train, label_files_paths_t, images_shape_t)
-    label_data_v=json_to_txt(set_name_val, label_files_paths_v, images_shape_v)
-      
+    folder_path_labels = Path(r"data/all_labels_json")
+    folder_path_images = Path(r"data/all_images")
+    image_files = list(folder_path_images.glob("*.jpg"))
+    images = [cv2.imread(str(i)) for i in image_files]
+    images_shape = [i.shape for i in images]
+    label_files_paths = list(folder_path_labels.glob("*.json"))
+    json_to_txt(label_files_paths, images_shape)
+    source_images = 'data/all_images'
+    source_labels = 'data/all_labels'
+    train_images = 'data/images/train'
+    train_labels = 'data/labels/train'
+    val_images = 'data/images/val'
+    val_labels = 'data/labels/val'
+    train_files,val_files=train_val_split(source_images, source_labels, train_images,train_labels,val_images,val_labels)
+    move_files(source_images,source_labels,train_files, train_images, train_labels)
+    move_files(source_images,source_labels,val_files, val_images, val_labels)
 
 if __name__ == "__main__":
     run_test()
